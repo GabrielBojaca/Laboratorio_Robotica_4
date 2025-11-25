@@ -9,6 +9,8 @@ import tty
 import time
 
 
+RATE_HZ = 50.0 
+
 # -----------------------------
 # FUNCIONES PARA LEER TECLAS
 # -----------------------------
@@ -92,34 +94,63 @@ class TurtleController(Node):
     # --------------------------------------
     #  MOVIMIENTO CON TIEMPO PARA DIBUJAR
     # --------------------------------------
+
     def forward_for(self, t):
         msg = Twist()
         msg.linear.x = 1.0
-        self.publisher_.publish(msg)
-        time.sleep(t)
+
+        rate = 1.0 / RATE_HZ    # 60 Hz
+        steps = int(t / rate)
+
+        for _ in range(steps):
+            self.publisher_.publish(msg)
+            time.sleep(rate)
+
         self.stop()
+
 
     def backward_for(self, t):
         msg = Twist()
         msg.linear.x = -1.0
-        self.publisher_.publish(msg)
-        time.sleep(t)
+
+        rate = 1.0 / RATE_HZ
+        steps = int(t / rate)
+
+        for _ in range(steps):
+            self.publisher_.publish(msg)
+            time.sleep(rate)
+
         self.stop()
+
 
     def turn_left_for(self, t):
         msg = Twist()
-        msg.angular.z = 10.0
-        self.publisher_.publish(msg)
-        time.sleep(t)
+        msg.angular.z = 1.0    # RECOMENDADO
+
+        rate = 1.0 / RATE_HZ
+        steps = int(t / rate)
+
+        for _ in range(steps):
+            self.publisher_.publish(msg)
+            time.sleep(rate)
+
         self.stop()
+
 
     def turn_right_for(self, t):
         msg = Twist()
-        msg.angular.z = -10.0
-        self.publisher_.publish(msg)
-        time.sleep(t)
+        msg.angular.z = -1.0   # RECOMENDADO
+
+        rate = 1.0 / RATE_HZ
+        steps = int(t / rate)
+
+        for _ in range(steps):
+            self.publisher_.publish(msg)
+            time.sleep(rate)
+
         self.stop()
 
+   
 
 
     # =====================================
@@ -128,21 +159,24 @@ class TurtleController(Node):
 
     # --- J ---
     def draw_J(self):
-        self.forward_for(0.2) # Aproximación
-        self.forward_for(0.5) # Priemera linea
-        self.turn_left_for((3.141592/40)) # Girar 45° 
-        self.forward_for(0.25) # Segunda linea
-        self.turn_left_for((3.141592/40)) # Girar 45° 
-        self.forward_for(1.8233) # Segunda linea
-        self.turn_left_for((3.141592/20)) # Girar 90°
-        self.forward_for(0.5) # Priemera linea
-        self.backward_for(1) # Priemera linea
-        self.forward_for(0.5) # Priemera linea
-        
 
-        #self.forward_for(0.5) 
-        #self.turn_left_for(1.5)
-        #self.forward_for(1)
+        self.forward_for(0.2) # Aproximación 
+        self.forward_for(0.25) # Priemera linea 
+        self.turn_left_for((3.141592/4.0)) # Girar 45° 
+        self.forward_for(0.25) # Segunda linea 
+        self.turn_left_for((3.141592/4.0)) # Girar 45° 
+        self.forward_for(1.8233) # Segunda linea 
+        self.turn_left_for((3.141592/2.0)) # Girar 90° 
+        self.forward_for(0.5) # Segunda linea 
+        self.backward_for(1.0) # Segunda linea 
+        self.forward_for(0.5) # Segunda linea 
+        self.turn_left_for((3.141592/2.0)) # Girar 90° 
+        self.forward_for(1.8233) # Segunda linea 
+        self.turn_right_for((3.141592/4.0)) # Girar 45° 
+        self.forward_for(0.25)
+        self.turn_right_for((3.141592/4.0)) # Girar 45° 
+        self.forward_for(0.25)
+        self.turn_left_for((3.141592)) # Girar 180° 
 
     # --- N ---
     def draw_N(self):
