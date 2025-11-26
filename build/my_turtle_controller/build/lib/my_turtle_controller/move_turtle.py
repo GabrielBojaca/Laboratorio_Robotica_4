@@ -14,7 +14,7 @@ RATE_HZ = 50.0
 # -----------------------------
 # FUNCIONES PARA LEER TECLAS
 # -----------------------------
-def get_key():
+def get_key():  
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
 
@@ -162,49 +162,98 @@ class TurtleController(Node):
 
         self.forward_for(0.2) # Aproximación 
         self.forward_for(0.25) # Priemera linea 
-        self.turn_left_for((3.141592/4.0)) # Girar 45° 
+        self.turn_left_for(3.141592/4.0) # Girar 45° 
         self.forward_for(0.25) # Segunda linea 
-        self.turn_left_for((3.141592/4.0)) # Girar 45° 
+        self.turn_left_for(3.141592/4.0) # Girar 45° 
         self.forward_for(1.8233) # Segunda linea 
-        self.turn_left_for((3.141592/2.0)) # Girar 90° 
-        self.forward_for(0.5) # Segunda linea 
-        self.backward_for(1.0) # Segunda linea 
-        self.forward_for(0.5) # Segunda linea 
-        self.turn_left_for((3.141592/2.0)) # Girar 90° 
+        self.turn_left_for(3.141592/2.0) # Girar 90° 
+        self.forward_for(0.5) #   
+        self.backward_for(1.0) #   
+        self.forward_for(0.5) #   
+        self.turn_left_for(3.141592/2.0) # Girar 90° 
         self.forward_for(1.8233) # Segunda linea 
-        self.turn_right_for((3.141592/4.0)) # Girar 45° 
+        self.turn_right_for(3.141592/4.0) # Girar 45° 
         self.forward_for(0.25)
-        self.turn_right_for((3.141592/4.0)) # Girar 45° 
+        self.turn_right_for(3.141592/4.0) # Girar 45° 
         self.forward_for(0.25)
-        self.turn_left_for((3.141592)) # Girar 180° 
+        self.turn_left_for(3.141592) # Girar 180° 
+        self.forward_for(1.2)
 
     # --- N ---
     def draw_N(self):
+        self.forward_for(0.2) # Aproximación 
+        self.turn_left_for(3.141592/2.0) # Girar 90° 
+        self.forward_for(2) # Aproximación 
+        self.turn_right_for(153.43*( 3.141592/180.0)) # Girar 90° 
+        self.forward_for(2.236)
+        self.turn_left_for(153.43*(3.141592/180.0)) # Girar 90° 
         self.forward_for(2)
-        self.turn_right_for(0.5)
+
+        self.turn_right_for( 3.141592) # Girar 90° 
         self.forward_for(2)
-        self.turn_left_for(0.5)
-        self.forward_for(2)
+        self.turn_left_for(3.141592/2.0) # Girar 90° 
+        self.forward_for(0.2)
+
+
+        #self.turn_right_for(157.43 * (3.141592/180.0))
+        #self.forward_for(2)
+        #self.turn_left_for(0.5)
+        #self.forward_for(2)
 
     # --- G ---
     def draw_G(self):
-        self.forward_for(2)
-        self.turn_left_for(1)
-        self.forward_for(2)
-        self.turn_left_for(1)
-        self.forward_for(1)
-        self.turn_left_for(1)
-        self.forward_for(1)
+        self.forward_for(0.2)
+        self.turn_left_for(90*(3.141592/180.0))
+        self.forward_for(1.8)
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.8)
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.8)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(1.8)
+        self.turn_left_for(90*(3.141592/180.0))
+        self.forward_for(0.8)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.6)
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+        self.turn_left_for(45*(3.141592/180.0))
+        self.turn_left_for(90*(3.141592/180.0))
+        self.forward_for(0.4)
+
 
     # --- A ---
     def draw_A(self):
-        self.turn_left_for(1)
-        self.forward_for(2)
-        self.turn_right_for(2)
-        self.forward_for(2)
-        self.backward_for(1)
-        self.turn_left_for(1)
-        self.forward_for(1)
+        self.forward_for(0.2)
+        self.turn_left_for(75.96*(3.141592/180.0))
+        self.forward_for(2.0615)
+        self.turn_right_for(75.96*2*(3.141592/180.0))
+        self.forward_for(1.0607)
+        self.turn_right_for((180-75.96)*(3.141592/180.0))
+        self.forward_for(0.5)
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.5)
+        self.turn_right_for(75.96*(3.141592/180.0))
+        self.forward_for(1.0607)
+        self.turn_left_for(75.96*(3.141592/180.0))
+        self.forward_for(0.2)
+
 
     # --- C ---
     def draw_C(self):
