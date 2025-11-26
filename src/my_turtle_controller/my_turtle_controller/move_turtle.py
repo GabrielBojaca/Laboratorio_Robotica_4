@@ -337,42 +337,95 @@ class TurtleController(Node):
 
     # --- M ---
     def draw_M(self):
+        self.forward_for(0.2)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(2)
-        self.turn_right_for(1)
-        self.forward_for(1.5)
-        self.turn_left_for(1)
-        self.forward_for(1.5)
-        self.turn_right_for(1)
+
+        self.turn_right_for(122*(3.141592/180.0))
+        self.forward_for(0.9434)
+
+        self.turn_left_for(64*(3.141592/180.0))
+        self.forward_for(0.9343)
+
+        self.turn_right_for(122*(3.141592/180.0))
         self.forward_for(2)
+
+        self.turn_left_for(90*(3.141592/180.0))
+        self.forward_for(0.2)
+
 
     # --- E ---
     def draw_E(self):
+        self.forward_for(0.2)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(2)
-        self.turn_right_for(1)
+
+        self.turn_right_for(90*(3.141592/180.0))
         self.forward_for(1)
-        self.backward_for(1)
-        self.turn_left_for(1)
+
+        self.turn_left_for(180*(3.141592/180.0))
         self.forward_for(1)
-        self.turn_right_for(1)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(1)
-        self.backward_for(1)
-        self.turn_left_for(1)
+
+        self.turn_left_for(90*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(1)
-        self.turn_right_for(1)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(1)
+
+        self.forward_for(0.2)
 
     # --- B ---
     def draw_B(self):
+        self.forward_for(0.2)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(2)
-        self.turn_right_for(1)
+
+        self.turn_right_for(90*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_left_for(180*(3.141592/180.0))
         self.forward_for(1)
-        self.turn_right_for(1)
-        self.forward_for(1)
-        self.backward_for(1)
-        self.turn_left_for(1)
-        self.forward_for(1)
-        self.turn_left_for(1)
-        self.forward_for(1)
+        self.forward_for(0.2)
+
 
 
 
