@@ -257,19 +257,83 @@ class TurtleController(Node):
 
     # --- C ---
     def draw_C(self):
-        self.forward_for(2)
-        self.turn_left_for(1)
-        self.forward_for(2)
-        self.turn_left_for(1)
-        self.forward_for(2)
+        self.forward_for(0.2)
+        self.forward_for(0.2)
+
+        self.turn_left_for(135*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(1.6)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(1.6)
+
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+
+        self.turn_left_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_left_for(180*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_left_for(135*(3.141592/180.0))
+        self.forward_for(0.2)
+        self.forward_for(0.2)
+
 
     # --- P ---
     def draw_P(self):
+        self.forward_for(0.2)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(2)
-        self.turn_right_for(1)
+
+        self.turn_right_for(90*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.6)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.28284)
+
+        self.turn_right_for(45*(3.141592/180.0))
+        self.forward_for(0.8)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(1)
-        self.turn_right_for(1)
+
+        self.turn_left_for(90*(3.141592/180.0))
         self.forward_for(1)
+
+        self.forward_for(0.2)
+
 
     # --- M ---
     def draw_M(self):
