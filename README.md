@@ -1,3 +1,15 @@
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dbd3fe7d-6ee8-4415-9bd6-35dfebacb376">
+</p>
+<!-- ✦✦✦ FUTURE IS AUTOMATED ✦✦✦ -->
+<!-- Banner superior “neón” -->
+<p align="center">
+  <!-- El banner se genera usando capsule-render con colores adaptados al Laboratorio 2 -->
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=140&color=0:04041A,50:14213D,100:0A4D68&text=Laboratorio%20Rob%C3%B3tica%202&fontColor=E0FBFC&fontAlign=50&fontAlignY=30&desc=An%C3%A1lisis%20y%20Operaci%C3%B3n%20del%20Manipulador%20Motoman%20MH6&descAlign=50&descAlignY=60" alt="header" />
+</p>
+
+<h1 align="center">🤖 LABORATORIO ROBÓTICA 4 – INTRODUCCIÓN A ROS HUMBLE-TURTLESIM </h1>
+
 # Laboratorio_Robotica_4
 
 El archivo launch_turtle.sh permite ejecutar el nodo de turtlesim y el controlador de forma sencilla, basta con agregarle permisos de ejecución y ejecutarlo desde 
