@@ -41,3 +41,26 @@ Con los permisos configurados, ahora puede ejecutar el script desde la terminal.
 Al ejecutarlo:
 - Se abrirá una terminal ejecutando `turtlesim_node`.
 - Luego se abrirá otra terminal ejecutando tu nodo `move_turtle`.
+
+
+
+# Aplicacion del lab en Linux usando ROS2 Humble
+A continuacion se muestra el video donde se ve el codigo de pyhton creado funcionando en Ros2 Humble usando el turtlesim para el dibujo de cada una de las letras de los integrantes del equipo
+
+Hacer click en la imagen o en el recuadro abajo de la imagen.
+<p align="center">
+  <a href="https://youtu.be/d3QGhGEchfY">
+    <img src="https://github.com/user-attachments/assets/250aeb39-6fe2-4911-bd64-38e69e73731d" 
+         alt="Ver video de la práctica con robot Epson para paletizado." 
+         width="450" />
+  </a>
+
+
+</p>
+
+<p align="center">
+  <a href="https://youtu.be/d3QGhGEchfY">
+    <img src="https://img.shields.io/badge/Ver%20en%20YouTube-%F0%9F%94%B4-red?style=for-the-badge" 
+         alt="Ver en YouTube">
+  </a>
+</p>
