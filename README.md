@@ -49,7 +49,7 @@ A continuacion se muestra el video donde se ve el codigo de pyhton creado funcio
 
 Hacer click en la imagen o en el recuadro abajo de la imagen.
 <p align="center">
-  <a href="https://youtu.be/d3QGhGEchfY">
+  <a href="https://youtu.be/ppMkalenVMg">
     <img src="https://github.com/user-attachments/assets/250aeb39-6fe2-4911-bd64-38e69e73731d" 
          alt="Ver video de la práctica con robot Epson para paletizado." 
          width="450" />
@@ -59,7 +59,7 @@ Hacer click en la imagen o en el recuadro abajo de la imagen.
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/d3QGhGEchfY">
+  <a href="https://youtu.be/ppMkalenVMg">
     <img src="https://img.shields.io/badge/Ver%20en%20YouTube-%F0%9F%94%B4-red?style=for-the-badge" 
          alt="Ver en YouTube">
   </a>
