@@ -11,6 +11,9 @@
 
 # Laboratorio 4: Introducción a ROS 2 y Turtlesim
 
+![Turtle](https://github.com/user-attachments/assets/b25c60f2-1fe4-4063-85d4-3cb31e83c775)
+
+
 </p>
 
 <p align="center">
