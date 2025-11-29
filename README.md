@@ -11,7 +11,14 @@
 
 # Laboratorio 4: Introducción a ROS 2 y Turtlesim
 
+</p>
 
+<p align="center">
+  <a href="https://youtu.be/ppMkalenVMg">
+    <img src="https://img.shields.io/badge/Ver%20en%20YouTube-%F0%9F%94%B4-red?style=for-the-badge" 
+         alt="Ver en YouTube">
+  </a>
+</p>
 
 
 ## Objetivos
