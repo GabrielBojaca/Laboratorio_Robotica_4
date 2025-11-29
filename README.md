@@ -64,6 +64,9 @@ El control manual de la tortuga se realiza utilizando las **flechas del teclado*
 
 ### 3. Dibujo automático de letras
 
+![Dibujo](https://github.com/user-attachments/assets/af28ae7c-344e-40e2-b337-cfbbed3c263a)
+
+
 La tortuga dibuja las letras de las iniciales del equipo utilizando teclas específicas:
 - **Tecla M**: dibuja la letra "M".
 - **Tecla F**: dibuja la letra "F".
