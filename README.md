@@ -187,5 +187,3 @@ A continuación, se presenta un video donde se explica el proceso de ejecución 
 - El uso de ROS 2 y los servicios como `/reset` permitió realizar una simulación precisa de las letras.
 
 ---
-
-**Repositorio GitHub**: [Acceder al repositorio](https://github.com/sergiosinlimites/lab4-robotics-ros2-turtlesim)
