@@ -16,7 +16,7 @@
 
 <center>
 <div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/b25c60f2-1fe4-4063-85d4-3cb31e83c775" width="500" height="500" />
+  <img src="https://github.com/user-attachments/assets/b25c60f2-1fe4-4063-85d4-3cb31e83c775" width="500" height="550" />
 </div>
 </center>
 
