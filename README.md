@@ -4,12 +4,13 @@
 <!-- ✦✦✦ FUTURE IS AUTOMATED ✦✦✦ -->
 <!-- Banner superior “neón” -->
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=180&width=800&color=0:04041A,50:14213D,100:0A4D68&text=Laboratorio%204%20-%20Introducci%C3%B3n%20a%20ROS%202%20y%20Turtlesim&fontColor=E0FBFC&fontAlign=50&fontAlignY=30&desc=Laboratorio%204%20-%20Introducci%C3%B3n%20a%20ROS%202%20y%20Turtlesim&descAlign=50&descAlignY=60" alt="header" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=200&width=1000&color=0:04041A,50:14213D,100:0A4D68&text=Laboratorio%204%20-%20Introducci%C3%B3n%20a%20ROS%202%20y%20Turtlesim&fontColor=E0FBFC&fontAlign=50&fontAlignY=30&desc=Laboratorio%204%20-%20Introducci%C3%B3n%20a%20ROS%202%20y%20Turtlesim&descAlign=50&descAlignY=60" alt="header" />
 </p>
 
 <h1 align="center">🤖 LABORATORIO 4 – INTRODUCCIÓN A ROS 2 HUMBLE - TURTLESIM</h1>
 
 # Laboratorio 4: Introducción a ROS 2 y Turtlesim
+
 
 <center>
 <div style="text-align: center;">
