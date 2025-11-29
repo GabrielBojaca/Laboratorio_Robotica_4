@@ -1,0 +1,407 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from turtlesim.msg import Pose
+from turtlesim.srv import TeleportAbsolute, SetPen
+import sys, tty, termios, threading, math, time
+
+# --- CONFIGURACIÓN DE TECLA ---
+def get_key():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        key = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return key
+
+class TurtleWriter(Node):
+    def __init__(self):
+        super().__init__('turtle_writer_pro')
+        
+        # Publicador y Suscriptor
+        self.vel_pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
+        self.pose_sub = self.create_subscription(Pose, '/turtle1/pose', self.pose_callback, 10)
+        
+        # Clientes
+        self.teleport_client = self.create_client(TeleportAbsolute, '/turtle1/teleport_absolute')
+        self.pen_client = self.create_client(SetPen, '/turtle1/set_pen')
+        
+        self.pose = None
+        self.busy = False 
+        self.spacing = 0.5  # Espacio entre letras
+        
+        # VARIABLES PARA EL MANEJO DE RENGLONES
+        self.origin_x = 1.0       # Margen izquierdo
+        self.base_y = 9.0         # Altura del primer renglón (Arriba)
+        self.line_height = 3.5    # Espacio vertical entre renglones
+        
+        self.letters_count = 0    # Cuántas letras llevamos en la línea actual
+        self.current_line = 0     # En qué renglón estamos (0, 1, 2...)
+
+        # Esperar conexión
+        self.get_logger().info("Esperando a Turtlesim...")
+        while self.pose is None and rclpy.ok():
+            rclpy.spin_once(self, timeout_sec=0.1)
+
+        # MOVER AL INICIO (ESQUINA SUPERIOR IZQUIERDA)
+        self.initialize_position()
+
+        # Hilo del teclado
+        self.thread = threading.Thread(target=self.key_loop)
+        self.thread.daemon = True
+        self.thread.start()
+
+    def pose_callback(self, msg):
+        self.pose = msg
+
+    # ----------------------------------------------------------------
+    #  UTILIDADES
+    # ----------------------------------------------------------------
+    def initialize_position(self):
+        """Lleva la tortuga a la posición inicial (arriba izquierda) sin pintar."""
+        self.set_pen(True)
+        self.teleport_abs(self.origin_x, self.base_y, 0.0)
+        self.set_pen(False)
+        self.get_logger().info("Posición inicial establecida en esquina superior izquierda.")
+
+    def stop(self):
+        self.vel_pub.publish(Twist())
+
+    def teleport_abs(self, x, y, theta):
+        req = TeleportAbsolute.Request()
+        req.x = float(x)
+        req.y = float(y)
+        req.theta = float(theta)
+        self.teleport_client.call_async(req)
+        time.sleep(0.05) 
+
+    def set_pen(self, off=False):
+        req = SetPen.Request()
+        req.r, req.g, req.b = 255, 255, 255
+        req.width = 3
+        req.off = 1 if off else 0
+        self.pen_client.call_async(req)
+        time.sleep(0.2) 
+
+    def finish_letter(self, start_x, start_y, letter_width):
+        """
+        Lógica inteligente:
+        1. Cuenta la letra terminada.
+        2. Si llegamos a 4, salta de línea y resetea X.
+        3. Si no, simplemente se mueve a la derecha.
+        """
+        self.set_pen(True) 
+        self.letters_count += 1
+        
+        # VERIFICAR SI TOCA CAMBIO DE LINEA (4 letras por línea)
+        if self.letters_count >= 4:
+            self.get_logger().info("¡Salto de línea!")
+            self.letters_count = 0          # Reiniciar contador
+            self.current_line += 1          # Bajar un renglón
+            
+            # Calcular nuevas coordenadas
+            new_x = self.origin_x
+            new_y = self.base_y - (self.current_line * self.line_height)
+            
+            # Verificar si nos salimos de la pantalla (abajo)
+            if new_y < 1.0:
+                self.get_logger().warning("¡Se acabó la pantalla! Volviendo arriba.")
+                self.current_line = 0
+                new_y = self.base_y
+
+            self.teleport_abs(new_x, new_y, 0.0)
+            
+        else:
+            # Comportamiento normal: Mover a la derecha
+            new_x = start_x + letter_width + self.spacing
+            # MANTENER LA ALTURA BASE ORIGINAL (start_y)
+            self.teleport_abs(new_x, start_y, 0.0) 
+
+        self.set_pen(False) 
+
+    def move_line(self, distance, tolerance=0.1, speed_factor=2.0):
+        if not self.pose: return
+        start_x, start_y = self.pose.x, self.pose.y
+        target_x = start_x + distance * math.cos(self.pose.theta)
+        target_y = start_y + distance * math.sin(self.pose.theta)
+        
+        cmd = Twist()
+        start_time = time.time()
+        
+        while rclpy.ok():
+            if time.time() - start_time > 4.0: break
+            dx = target_x - self.pose.x
+            dy = target_y - self.pose.y
+            dist = math.sqrt(dx**2 + dy**2)
+            
+            if dist < tolerance: break
+            
+            speed = max(0.5, min(3.0, speed_factor * dist))
+            if (dx * math.cos(self.pose.theta) + dy * math.sin(self.pose.theta)) < 0:
+                speed = -speed
+
+            cmd.linear.x = float(speed)
+            self.vel_pub.publish(cmd)
+            time.sleep(0.02)
+
+        self.stop()
+        self.teleport_abs(target_x, target_y, self.pose.theta)
+
+    def rotate(self, relative_angle, tolerance=0.05):
+        if not self.pose: return
+        target_angle = math.atan2(math.sin(self.pose.theta + relative_angle), math.cos(self.pose.theta + relative_angle))
+        cmd = Twist()
+        start_time = time.time()
+        
+        while rclpy.ok():
+            if time.time() - start_time > 3.0: break
+            error = math.atan2(math.sin(target_angle - self.pose.theta), math.cos(target_angle - self.pose.theta))
+            if abs(error) < tolerance: break
+            speed = max(0.5, min(2.5, 2.0 * abs(error)))
+            if error < 0: speed = -speed
+            cmd.angular.z = float(speed)
+            self.vel_pub.publish(cmd)
+            time.sleep(0.02)
+            
+        self.stop()
+        self.teleport_abs(self.pose.x, self.pose.y, target_angle)
+
+    # ----------------------------------------------------------------
+    #  LETRAS (Lógica de dibujo + Alineación base)
+    # ----------------------------------------------------------------
+    def draw_J(self):
+        start_x = self.pose.x
+        start_y = self.pose.y 
+        h, w = 2.0, 1.0
+
+        # J empieza arriba
+        self.set_pen(True)
+        self.teleport_abs(start_x, start_y + h, 0.0)
+        self.set_pen(False)
+        
+        self.move_line(w) 
+        self.move_line(-w/2) 
+        self.rotate(-math.pi/2) 
+        self.move_line(h) 
+        self.rotate(-math.pi/4) 
+        self.move_line(0.5)
+        
+        self.finish_letter(start_x, start_y, w)
+
+    def draw_N(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        self.teleport_abs(start_x, start_y, 0.0) # Asegurar base
+
+        h = 2.0
+        w = 1.5 
+        
+        self.rotate(math.pi/2)
+        self.move_line(h)
+        angle = math.atan2(-h, w)
+        self.teleport_abs(self.pose.x, self.pose.y, angle)
+        self.move_line(math.sqrt(h**2 + w**2))
+        self.teleport_abs(self.pose.x, self.pose.y, math.pi/2)
+        self.move_line(h)
+        
+        self.finish_letter(start_x, start_y, w)
+
+    def draw_G(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        h, w = 2.0, 1.5
+
+        # G empieza arriba
+        self.set_pen(True)
+        self.teleport_abs(start_x, start_y + h, 0.0)
+        self.set_pen(False)
+        
+        self.set_pen(True)
+        self.move_line(w) 
+        self.set_pen(False)
+        
+        self.rotate(math.pi) 
+        self.move_line(w) 
+        self.rotate(math.pi/2) 
+        self.move_line(h) 
+        self.rotate(math.pi/2) 
+        self.move_line(w) 
+        self.rotate(math.pi/2) 
+        self.move_line(h/2) 
+        self.rotate(math.pi/2) 
+        self.move_line(w/3) 
+        
+        self.finish_letter(start_x, start_y, w)
+
+    def draw_A(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        self.teleport_abs(start_x, start_y, 0.0) # Asegurar base
+
+        h = 2.0
+        leg_length = h + 0.2
+        width_a = leg_length 
+
+        self.rotate(math.pi/3) 
+        self.move_line(leg_length)
+        self.rotate(-(2*math.pi/3)) 
+        self.move_line(leg_length)
+
+        self.set_pen(True)
+        half_len = leg_length / 2
+        mid_x = start_x + half_len * math.cos(math.pi/3)
+        mid_y = start_y + half_len * math.sin(math.pi/3)
+        self.teleport_abs(mid_x, mid_y, 0.0)
+        self.set_pen(False)
+        self.move_line(half_len)
+
+        self.finish_letter(start_x, start_y, width_a)
+
+    def draw_C(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        
+        h, w = 2.0, 1.5
+        # C salta sola a su inicio
+        self.set_pen(True)
+        self.teleport_abs(start_x + w, start_y + h, math.pi)
+        self.set_pen(False)
+        self.move_line(w)
+        self.rotate(math.pi/2)
+        self.move_line(h)
+        self.rotate(math.pi/2)
+        self.move_line(w)
+        
+        self.finish_letter(start_x, start_y, w)
+
+    def draw_P(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        self.teleport_abs(start_x, start_y, 0.0)
+        
+        h, w = 2.0, 1.2
+        self.rotate(math.pi/2) 
+        self.move_line(h)
+        self.rotate(-math.pi/2) 
+        self.move_line(w)
+        self.rotate(-math.pi/2) 
+        self.move_line(h/2)
+        self.rotate(-math.pi/2) 
+        self.move_line(w)
+        
+        self.finish_letter(start_x, start_y, w)
+
+    def draw_M(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        self.teleport_abs(start_x, start_y, 0.0)
+        
+        h = 2.0
+        w_total = 2.0
+        
+        self.rotate(math.pi/2)
+        self.move_line(h)
+        self.rotate(-math.pi * 0.75)
+        self.move_line(1.4)
+        self.rotate(math.pi/2)
+        self.move_line(1.4)
+        self.rotate(-math.pi * 0.75)
+        self.move_line(h)
+        
+        self.finish_letter(start_x, start_y, w_total)
+
+    def draw_E(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        
+        h, w = 2.0, 1.2
+        self.set_pen(True)
+        self.teleport_abs(start_x + w, start_y + h, math.pi)
+        self.set_pen(False)
+        self.move_line(w)
+        self.rotate(math.pi/2)
+        self.move_line(h)
+        self.rotate(math.pi/2)
+        self.move_line(w)
+        self.set_pen(True)
+        self.teleport_abs(self.pose.x - w, self.pose.y + h/2, 0.0)
+        self.set_pen(False)
+        self.move_line(w*0.8)
+        
+        self.finish_letter(start_x, start_y, w)
+
+    def draw_B(self):
+        start_x = self.pose.x
+        start_y = self.pose.y
+        self.teleport_abs(start_x, start_y, 0.0)
+        
+        h, w = 2.0, 1.0
+        self.rotate(math.pi/2)
+        self.move_line(h)
+        self.rotate(-math.pi/2)
+        self.move_line(w)
+        self.rotate(-math.pi/2)
+        self.move_line(h/2)
+        self.rotate(-math.pi/2)
+        self.move_line(w)
+        self.rotate(math.pi)
+        self.move_line(w)
+        self.rotate(-math.pi/2)
+        self.move_line(h/2)
+        self.rotate(-math.pi/2)
+        self.move_line(w)
+        
+        self.finish_letter(start_x, start_y, w)
+
+    # ----------------------------------------------------------------
+    #  BUCLE TECLADO
+    # ----------------------------------------------------------------
+    def key_loop(self):
+        print("\n--- SISTEMA LISTO ---")
+        print(f"Inicio: ({self.origin_x}, {self.base_y})")
+        print("Modo automático: 4 letras por línea, 3 líneas.")
+        print("Presiona: J, N, G, A, C, P, M, E, B")
+        print("Presiona: 'Q' para salir.\n")
+        
+        while rclpy.ok():
+            k = get_key().upper()
+            if k == 'Q':
+                rclpy.shutdown()
+                break
+            
+            if not self.busy and k in ['J', 'N', 'G', 'A', 'C', 'P', 'M', 'E', 'B']:
+                self.busy = True
+                self.get_logger().info(f"Dibujando {k}...")
+                
+                if k == 'J': self.draw_J()
+                elif k == 'N': self.draw_N()
+                elif k == 'G': self.draw_G()
+                elif k == 'A': self.draw_A()
+                elif k == 'C': self.draw_C()
+                elif k == 'P': self.draw_P()
+                elif k == 'M': self.draw_M()
+                elif k == 'E': self.draw_E()
+                elif k == 'B': self.draw_B()
+                
+                self.busy = False
+                self.get_logger().info(f"Letra {k} lista.")
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = TurtleWriter()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
